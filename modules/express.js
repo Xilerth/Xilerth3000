@@ -4,14 +4,14 @@ import { askGPT } from "./gpt.js";
 import bodyParser from "body-parser";
 const app = express();
 app.use(cors());
-const PORT = 4000
+const port = process.env.PORT || 4000;
 
 var jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-//app listen port 3000;
+//app listen port 4000;
 export const setupExpress = () => {
-  app.listen(PORT, () => {
+  app.listen(port, () => {
     console.log("Server running on port" + PORT);
   });
 
