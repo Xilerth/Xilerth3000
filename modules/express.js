@@ -10,8 +10,8 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 //app listen port 3000;
 export const setupExpress = () => {
-  app.listen(3005, () => {
-    console.log("Server running on port 3005");
+  app.listen(9229, () => {
+    console.log("Server running on port 9229");
   });
 
   app.get("/", (req, res) => {
