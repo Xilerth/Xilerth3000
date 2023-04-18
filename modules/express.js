@@ -12,7 +12,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 //app listen port 4000;
 export const setupExpress = () => {
   app.listen(port, () => {
-    console.log("Server running on port" + PORT);
+    console.log("Server running on port " + port);
   });
 
   app.get("/", (req, res) => {
