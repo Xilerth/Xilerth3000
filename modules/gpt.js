@@ -6,16 +6,20 @@ dotenv.config({ path: "../.env" });
 
 const trim = (message) => message.trim().replace(/^"|"$|/g, "");
 
-export const askGPT = async (message) => {
+export const askGPT = async (message, personalityInput, language) => {
   const GPT_KEY = process.env.GPT_KEY;
   const MAX_CHARACTERS = 200;
   const MODEL = "gpt-3.5-turbo";
   const API_URL = `https://api.openai.com/v1/chat/completions`;
 
-  const { personality, context, preferences } = getPersonality();
+  const { personality, context, preferences } = getPersonality(personalityInput);
   const cleanMessage = message.replaceAll(`"`, "'");
 
-  const prompt = `Imagina que eres un usuario de Twitch que no hace streams y otro usuario te dice "${cleanMessage}". ${context} ${preferences}. El contexto del chat es Tematica de programación. Máximo ${MAX_CHARACTERS} caracteres.`;
+  let prompt = `Imagina que eres un usuario de Twitch que no hace streams y otro usuario te dice "${cleanMessage}". ${context} ${preferences}. El contexto del chat es Tematica de programación. Máximo ${MAX_CHARACTERS} caracteres.`;
+
+  if(language){
+    prompt = `${prompt}. El idioma del chat es ${language}.` 
+  }
 
   const headers = {
     "Content-Type": "application/json",

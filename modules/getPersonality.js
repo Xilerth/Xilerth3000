@@ -1,6 +1,8 @@
-import personalities from '../personalities.json' assert { type: "json" };
+import personalities from "../personalities.json" assert { type: "json" };
 
-export const getPersonality = () => {
-    const personality = personalities[Math.floor(Math.random() * personalities.length)];
-    return personality;
-}
+export const getPersonality = (personalityInput) => {
+  return (
+    personalities.find((p) => p.personality.toLowerCase() === personalityInput?.toLowerCase()) ||
+    personalities[Math.floor(Math.random() * personalities.length)]
+  );
+};
