@@ -11,6 +11,7 @@ setupExpress();
 const USER = process.env.USER;
 const PASSWORD = process.env.PASSWORD;
 const CHANNELS = ["xilerth"];
+let enabled = false;
 
 const client = new tmi.Client({
   identity: {
@@ -39,16 +40,31 @@ client.on("message", async (channel, tags, message, self) => {
 
   if (IGNORED_USERS.includes(username)) return;
 
-//   const isChosen = Math.floor(Math.random() * 5) === 0;
+  //check if message is a command 
+  if (message.startsWith("!stop")) {
+    enabled = false;
+    client.say(channel, "Modo off");
+    return;
+  };
 
-//   if (!isChosen) {
-//     return;
-//   }
+  //if start y es un mod o es el streamer
+  if (message.startsWith("!start") && (isMod)) {
+    enabled = true;
+    client.say(channel, "Modo on");
+    return;
+  }
+
+  if(!enabled){
+    return;
+  }
+
+  const isChosen = Math.floor(Math.random() * 5) === 0;
+
+  if (!isChosen) {
+    return;
+  }
 
   const { total_tokens, content, personality } = await askGPT(message);
   console.log(`${content} (${total_tokens} tokens)`);
   client.say(channel, `[Modo ${personality}] @${displayName}, ${content}`);
-
-  
-
 });
