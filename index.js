@@ -41,14 +41,14 @@ client.on("message", async (channel, tags, message, self) => {
   if (IGNORED_USERS.includes(username)) return;
 
   //check if message is a command 
-  if (message.startsWith("!stop")) {
+  if (message.startsWith("!stop") && username === "xilerth" || isMod) {
     enabled = false;
     client.say(channel, "Modo off");
     return;
   };
 
   //if start y es un mod o es el streamer
-  if (message.startsWith("!start") && (isMod)) {
+  if (message.startsWith("!start") && username === "xilerth" || isMod) {
     enabled = true;
     client.say(channel, "Modo on");
     return;
