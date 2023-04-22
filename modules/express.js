@@ -20,6 +20,12 @@ const limitTokensIP = 4000;
 var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+//limpiar el limitPerIP cada 12 horas
+
+setInterval(() => {
+  limitPerIP = {};
+}, 1000 * 60 * 60 * 24);
+
 //app listen port 4000;
 export const setupExpress = () => {
   app.listen(port, () => {
