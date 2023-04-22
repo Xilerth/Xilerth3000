@@ -61,13 +61,11 @@ export const setupExpress = () => {
       content,
       personality,
       ip,
-      limitPerIP: limitPerIP[ip],
     });
   });
 
   app.post("removeLimitForIP", jsonParser, async (req, res) => {
-    const ip =
-      req.headers["x-forwarded-for"] || req.socket.remoteAddres || req.clientIp;
+    const ip = req.body.ip;
     if (ip == undefined) {
       res.send({ message: "No se ha especificado la ip" });
       return;
