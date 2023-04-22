@@ -3,8 +3,10 @@ import cors from "cors";
 import { askGPT } from "./gpt.js";
 import bodyParser from "body-parser";
 import personalities from "../personalities.json" assert { type: "json" };
+import requestIp from 'request-ip';
 
 const app = express();
+app.use(requestIp.mw())
 app.use(cors());
 const port = process.env.PORT || 4000;
 
@@ -27,6 +29,8 @@ export const setupExpress = () => {
 
   app.post("/askGPT", jsonParser, async (req, res) => {
     console.log(req.body);
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddres || req.clientIp;
+    console.log(ip);
     const { message, language} = req.body;
     const personalityBody = req.body.personality;
     const { total_tokens, content, personality } = await askGPT(
@@ -34,6 +38,6 @@ export const setupExpress = () => {
       personalityBody,
       language
     );
-    res.send({ total_tokens, content, personality });
+    res.send({ total_tokens, content, personality, ip });
   });
 };
