@@ -61,6 +61,7 @@ export const setupExpress = () => {
       content,
       personality,
       ip,
+      limitPerIP: limitPerIP[ip],
     });
   });
 
