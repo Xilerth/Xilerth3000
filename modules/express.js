@@ -56,7 +56,13 @@ export const setupExpress = () => {
       language
     );
     updateLimit(ip, total_tokens);
-    res.send({ total_tokens, content, personality, ip, limitPerIP });
+    res.send({
+      total_tokens,
+      content,
+      personality,
+      ip,
+      limitPerIP: limitPerIP[ip],
+    });
   });
 
   app.post("removeLimitForIP", jsonParser, async (req, res) => {
