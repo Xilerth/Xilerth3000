@@ -15,7 +15,7 @@ const limitPerIP = {
   "0.0.0.0": 0,
 };
 
-const limitTokensIP = 2000;
+const limitTokensIP = 4000;
 
 var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -41,7 +41,8 @@ export const setupExpress = () => {
     if (checkIfLimitIsReached(ip)) {
       res.send({
         total_tokens: 0,
-        content: "You have reached the limit of tokens per IP",
+        content:
+          "Has alcanzado el limite de tokens por IP, vuelve mañana 👮🚓🚨🚨",
         personality: "Guardia de Seguridad de la API",
         ip,
       });
@@ -55,7 +56,22 @@ export const setupExpress = () => {
       language
     );
     updateLimit(ip, total_tokens);
-    res.send({ total_tokens, content, personality, ip });
+    res.send({ total_tokens, content, personality, ip, limitPerIP });
+  });
+
+  app.post("removeLimitForIP", jsonParser, async (req, res) => {
+    const ip =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddres || req.clientIp;
+    if (ip == undefined) {
+      res.send({ message: "No se ha especificado la ip" });
+      return;
+    }
+    if (limitPerIP[ip] == undefined) {
+      res.send({ message: "La ip no existe" });
+      return;
+    }
+    delete limitPerIP[ip];
+    res.send({ message: "La ip ha sido eliminada" });
   });
 
   function checkIfLimitIsReached(ip) {
