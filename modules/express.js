@@ -104,5 +104,6 @@ export const setupExpress = () => {
       limitPerIP[ip] = 0;
     }
     limitPerIP[ip] += total_tokens;
+    console.log(limitPerIP)
   }
 };
