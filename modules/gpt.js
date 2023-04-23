@@ -15,7 +15,7 @@ export const askGPT = async (message, personalityInput, language) => {
   const { personality, context, preferences } = getPersonality(personalityInput);
   const cleanMessage = message.replaceAll(`"`, "'");
 
-  let prompt = `Imagina que eres un usuario de Twitch que no hace streams y otro usuario te dice "${cleanMessage}". ${context} ${preferences}. El contexto del chat es Tematica de programación. Máximo ${MAX_CHARACTERS} caracteres.`;
+  let prompt = `Imagina que eres un usuario de Twitch que no hace streams y otro usuario te dice "${cleanMessage}". ${context} ${preferences}. El contexto del chat es Tematica de programación. Máximo ${MAX_CHARACTERS} caracteres. Tu nombre es Genius.`;
 
   if(language){
     prompt = `${prompt}. El idioma del chat es ${language}.` 
