@@ -71,7 +71,7 @@ export const setupExpress = () => {
     });
   });
 
-  app.post("removeLimitForIP", jsonParser, async (req, res) => {
+  app.post("/removeLimitForIP", jsonParser, async (req, res) => {
     const ip = req.body.ip;
     if (ip == undefined) {
       res.send({ message: "No se ha especificado la ip" });
