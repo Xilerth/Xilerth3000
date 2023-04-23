@@ -12,13 +12,26 @@ export const askGPT = async (message, personalityInput, language) => {
   const MODEL = "gpt-3.5-turbo";
   const API_URL = `https://api.openai.com/v1/chat/completions`;
 
-  const { personality, context, preferences } = getPersonality(personalityInput);
+  const { personality, context, preferences } =
+    getPersonality(personalityInput);
   const cleanMessage = message.replaceAll(`"`, "'");
 
   let prompt = `Imagina que eres un usuario de Twitch que no hace streams y otro usuario te dice "${cleanMessage}". ${context} ${preferences}. El contexto del chat es Tematica de programación. Máximo ${MAX_CHARACTERS} caracteres. Tu nombre es Genius.`;
 
-  if(language){
-    prompt = `${prompt}. El idioma del chat es ${language}.` 
+  if (language) {
+    prompt = `${prompt}. El idioma del chat es ${language}.`;
+  }
+
+  // calcula cantidad de tokens del prompt
+
+  totalTokens(prompt);
+
+  if (totalTokens(prompt) > 4000) {
+    return {
+      total_tokens: totalTokens(prompt),
+      personality: "Policia del prompt",
+      content: "CUIDADO! El prompt excede los 4000 tokens",
+    };
   }
 
   const headers = {
@@ -58,5 +71,10 @@ export const askGPT = async (message, personalityInput, language) => {
   } catch (error) {
     console.error(error);
     return "Error al generar respuesta";
+  }
+
+  function totalTokens(prompt) {
+    const tokens = prompt.replaceAll(" ", "").length / 2;
+    return tokens;
   }
 };
