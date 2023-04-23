@@ -12,7 +12,7 @@ app.use(cors());
 const port = process.env.PORT || 4000;
 
 //maximo 2000 tokens por ip
-const limitPerIP = getLimitGPT();
+const limitPerIP = {}
 
 const limitTokensIP = 4000;
 
@@ -21,11 +21,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 //limpiar el limitPerIP cada 12 horas
 function getLimitGPT() {
-  return JSON.parse(fs.readFileSync("./limitGPT.json"));
-}
-
-function setLimitGPT(limitGPT) {
-  fs.writeFileSync("./limitGPT.json", JSON.stringify(limitGPT));
+  return limitPerIP;
 }
 
 setInterval(() => {
@@ -67,7 +63,6 @@ export const setupExpress = () => {
       language
     );
     updateLimit(ip, total_tokens);
-
     res.send({
       total_tokens,
       content,
@@ -88,7 +83,6 @@ export const setupExpress = () => {
       return;
     }
     delete limitPerIP[ip];
-    setLimitGPT(limitPerIP);
     res.send({ message: "La ip ha sido eliminada" });
   });
 
@@ -122,5 +116,4 @@ function updateLimit(ip, total_tokens) {
     limitPerIP[ip] = 0;
   }
   limitPerIP[ip] += total_tokens;
-  setLimitGPT(limitPerIP);
 }
