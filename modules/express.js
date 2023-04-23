@@ -103,6 +103,7 @@ export const setupExpress = () => {
     if (limitPerIP[ip] == undefined) {
       limitPerIP[ip] = 0;
     }
+    console.log(limitPerIP, ip, total_tokens)
     limitPerIP[ip] += total_tokens;
     console.log(limitPerIP)
   }
