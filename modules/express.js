@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { askGPT } from "./gpt.js";
+import { askGPT, celebPhrase } from "./gpt.js";
 import bodyParser from "body-parser";
 import personalities from "../personalities.json" assert { type: "json" };
 import requestIp from "request-ip";
@@ -12,7 +12,7 @@ app.use(cors());
 const port = process.env.PORT || 4000;
 
 //maximo 2000 tokens por ip
-const limitPerIP = {}
+const limitPerIP = {};
 
 const limitTokensIP = 4000;
 
@@ -95,6 +95,11 @@ export const setupExpress = () => {
     }
 
     res.send({ limitPerIP: getLimitGPT()[ip] });
+  });
+
+  app.get("/celebPhrase", async (req, res) => {
+    const { content } = await celebPhrase();
+    res.send({ content });
   });
 };
 
