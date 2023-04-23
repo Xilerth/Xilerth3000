@@ -24,11 +24,9 @@ export const askGPT = async (message, personalityInput, language) => {
 
   // calcula cantidad de tokens del prompt
 
-  totalTokens(prompt);
-
   if (totalTokens(prompt) > 4000) {
     return {
-      total_tokens: totalTokens(prompt),
+      total_tokens: 0,
       personality: "Policia del prompt",
       content: "CUIDADO! El prompt excede los 4000 tokens",
     };
