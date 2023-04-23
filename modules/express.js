@@ -47,7 +47,6 @@ export const setupExpress = () => {
   });
 
   app.post("/askGPT", jsonParser, async (req, res) => {
-    console.log(req.body);
     const ip =
       req.headers["x-forwarded-for"] || req.socket.remoteAddres || req.clientIp;
     if (checkIfLimitIsReached(ip)) {
@@ -68,6 +67,7 @@ export const setupExpress = () => {
       language
     );
     updateLimit(ip, total_tokens);
+
     res.send({
       total_tokens,
       content,
@@ -79,7 +79,6 @@ export const setupExpress = () => {
 
   app.post("/removeLimitForIP", jsonParser, async (req, res) => {
     const ip = req.body.ip;
-    console.log(req.body, limitPerIP);
     if (ip == undefined) {
       res.send({ message: "No se ha especificado la ip" });
       return;
@@ -89,7 +88,19 @@ export const setupExpress = () => {
       return;
     }
     delete limitPerIP[ip];
+    setLimitGPT(limitPerIP);
     res.send({ message: "La ip ha sido eliminada" });
+  });
+
+  app.get("/getCurrentTokens", (req, res) => {
+    const ip =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddres || req.clientIp;
+    if (getLimitGPT()[ip] == undefined) {
+      res.send({ limitPerIP: 0 });
+      return;
+    }
+
+    res.send({ limitPerIP: getLimitGPT()[ip] });
   });
 };
 
@@ -110,7 +121,6 @@ function updateLimit(ip, total_tokens) {
   if (limitPerIP[ip] == undefined) {
     limitPerIP[ip] = 0;
   }
-  console.log(limitPerIP, ip, total_tokens);
   limitPerIP[ip] += total_tokens;
-  console.log(limitPerIP);
+  setLimitGPT(limitPerIP);
 }
