@@ -4,6 +4,7 @@ import { askGPT } from "./gpt.js";
 import bodyParser from "body-parser";
 import personalities from "../personalities.json" assert { type: "json" };
 import requestIp from "request-ip";
+import fs from "fs";
 
 const app = express();
 app.use(requestIp.mw());
@@ -11,9 +12,7 @@ app.use(cors());
 const port = process.env.PORT || 4000;
 
 //maximo 2000 tokens por ip
-const limitPerIP = {
-  "0.0.0.0": 0,
-};
+const limitPerIP = getLimitGPT();
 
 const limitTokensIP = 4000;
 
@@ -21,9 +20,16 @@ var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 //limpiar el limitPerIP cada 12 horas
+function getLimitGPT() {
+  return JSON.parse(fs.readFileSync("./limitGPT.json"));
+}
+
+function setLimitGPT(limitGPT) {
+  fs.writeFileSync("./limitGPT.json", JSON.stringify(limitGPT));
+}
 
 setInterval(() => {
-  limitPerIP = {};
+  setLimitGPT({});
 }, 1000 * 60 * 60 * 24);
 
 //app listen port 4000;
@@ -85,26 +91,26 @@ export const setupExpress = () => {
     delete limitPerIP[ip];
     res.send({ message: "La ip ha sido eliminada" });
   });
-
-  function checkIfLimitIsReached(ip) {
-    if (limitPerIP[ip] == undefined) {
-      limitPerIP[ip] = 0;
-      return false;
-    }
-
-    if (limitPerIP[ip] >= limitTokensIP) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function updateLimit(ip, total_tokens) {
-    if (limitPerIP[ip] == undefined) {
-      limitPerIP[ip] = 0;
-    }
-    console.log(limitPerIP, ip, total_tokens)
-    limitPerIP[ip] += total_tokens;
-    console.log(limitPerIP)
-  }
 };
+
+function checkIfLimitIsReached(ip) {
+  if (limitPerIP[ip] == undefined) {
+    limitPerIP[ip] = 0;
+    return false;
+  }
+
+  if (limitPerIP[ip] >= limitTokensIP) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function updateLimit(ip, total_tokens) {
+  if (limitPerIP[ip] == undefined) {
+    limitPerIP[ip] = 0;
+  }
+  console.log(limitPerIP, ip, total_tokens);
+  limitPerIP[ip] += total_tokens;
+  console.log(limitPerIP);
+}
