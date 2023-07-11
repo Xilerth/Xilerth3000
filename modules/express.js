@@ -1,9 +1,10 @@
 import express from "express";
 import cors from "cors";
-import { askGPT, celebPhrase } from "./gpt.js";
+import { askGPT, celebPhrase, translate } from "./gpt.js";
 import bodyParser from "body-parser";
 import personalities from "../personalities.json" assert { type: "json" };
 import requestIp from "request-ip";
+import languages from "../languages.json" assert { type: "json" };
 import fs from "fs";
 
 const app = express();
@@ -72,6 +73,14 @@ export const setupExpress = () => {
     });
   });
 
+  app.post("/translate", jsonParser, async (req, res) => {
+    const { message, language, context } = req.body;
+    const { content } = await translate(message, language, context);
+    res.send({
+      content,
+    });
+  });
+
   app.post("/removeLimitForIP", jsonParser, async (req, res) => {
     const ip = req.body.ip;
     if (ip == undefined) {
@@ -100,6 +109,10 @@ export const setupExpress = () => {
   app.get("/celebPhrase", async (req, res) => {
     const { content } = await celebPhrase();
     res.send({ content });
+  });
+
+  app.get("/languages", (req, res) => {
+    res.send(languages);
   });
 };
 
