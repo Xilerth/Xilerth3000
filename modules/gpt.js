@@ -142,14 +142,12 @@ export const translate = async (message, language, context) => {
     )?.name;
   }
 
-  console.log(promptContext, language);
-
   const body = {
     messages: [
       {
         role: "user",
         content: trim(
-          `Traduce "${message}" al ${language}. ${promptContext}. Solo responde la traducción`
+          `Traduce "${message}" al ${language}. ${promptContext}. Solo responde con la traducción, no añadas explicaciones.`
         ),
       },
     ],
@@ -168,7 +166,6 @@ export const translate = async (message, language, context) => {
     const { choices } = data;
     const { message } = choices[0];
     const { content } = message;
-    console.log(content);
     return {
       content: trim(content),
     };

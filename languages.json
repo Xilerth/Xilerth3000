@@ -94,5 +94,13 @@
   {
     "code": "he",
     "name": "Hebrew"
+  },
+  {
+    "code": "sign",
+    "name": "Emojis"
+  },
+  {
+    "code": "sind",
+    "name": "Sindarin"
   }
 ]
