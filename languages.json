@@ -101,6 +101,34 @@
   },
   {
     "code": "sind",
-    "name": "Sindarin"
+    "name": "Sindarin (Elfic)"
+  },
+  {
+    "code": "navi",
+    "name": "Na'vi (Avatar)"
+  },
+  {
+    "code": "kling",
+    "name": "Klingon (Star Trek)"
+  },
+  {
+    "code": "quenya",
+    "name": "Quenya (Elfic)"
+  },
+  {
+    "code": "parsel",
+    "name": "Parsel (Harry Potter)"
+  },
+  {
+    "code": "morse",
+    "name": "Morse"
+  },
+  {
+    "code": "binary",
+    "name": "Binary"
+  },
+  {
+    "code": "dothraki",
+    "name": "Dothraki (Game of Thrones)"
   }
 ]
