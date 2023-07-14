@@ -186,7 +186,7 @@ export const randomUsers = async (userList, count) => {
   };
 
   userList.splice(100);
-  const userListFiltered = userListSpliced.map((user) => user.slice(0, 40));
+  const userListFiltered = userList.map((user) => user.slice(0, 40));
   const userListString = userListFiltered.join(", ");
 
   const body = {
