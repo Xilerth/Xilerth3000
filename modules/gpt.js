@@ -222,7 +222,6 @@ export const randomUsers = async (userList, count) => {
     const { content } = message;
 
     const contentJSON = JSON.parse(content);
-    console.log(content);
     const { winners, errors } = contentJSON;
 
     if (winners.length === 0 && errors === "") {
