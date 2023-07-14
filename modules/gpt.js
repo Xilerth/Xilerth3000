@@ -185,7 +185,7 @@ export const randomUsers = async (userList, count) => {
     Authorization: `Bearer ${GPT_KEY}`,
   };
 
-  const userListSpliced = userList.toSpliced(100);
+  userList.splice(100);
   const userListFiltered = userListSpliced.map((user) => user.slice(0, 40));
   const userListString = userListFiltered.join(", ");
 
