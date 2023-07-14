@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { askGPT, celebPhrase, translate } from "./gpt.js";
+import { askGPT, celebPhrase, translate, randomUsers } from "./gpt.js";
 import bodyParser from "body-parser";
 import personalities from "../personalities.json" assert { type: "json" };
 import requestIp from "request-ip";
@@ -78,6 +78,15 @@ export const setupExpress = () => {
     const { content } = await translate(message, language, context);
     res.send({
       content,
+    });
+  });
+
+  app.post("/randomUsers", jsonParser, async (req, res) => {
+    const { userList, count } = req.body;
+    const { content, errors } = await randomUsers(userList, count);
+    res.send({
+      content,
+      errors,
     });
   });
 

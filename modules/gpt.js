@@ -174,3 +174,72 @@ export const translate = async (message, language, context) => {
     return "Error al generar respuesta";
   }
 };
+
+export const randomUsers = async (userList, count) => {
+  const GPT_KEY = process.env.GPT_KEY;
+  const MODEL = "gpt-3.5-turbo";
+  const API_URL = `https://api.openai.com/v1/chat/completions`;
+
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${GPT_KEY}`,
+  };
+
+  const userListSpliced = userList.toSpliced(100);
+  const userListFiltered = userListSpliced.map((user) => user.slice(0, 40));
+  const userListString = userListFiltered.join(", ");
+
+  const body = {
+    messages: [
+      {
+        role: "user",
+        content: trim(
+          `Eligeme ${count} nombre/s de la lista: [${userListString}]
+           Requisitos:
+           - Los nombres que salen tienen que ser unicos, no pueden repetirse.
+           - La Lista de nombres seleccionados tiene que tener este formato: {"winners": [], "errors": ""} !importante, si no hay devuelve error .
+           - No añadas mas texto, solo responde con los nombres seleccionados.
+           - Si hay errores en la respuesta, da un error generico en el campo "errors" {"winners": [], "errors": ""}.
+           - Si no hay suficientes nombres, da un error generico en el campo "errors" {"winners": [], "errors": ""}.
+           `
+        ),
+      },
+    ],
+    model: MODEL,
+    n: 1,
+    stop: null,
+  };
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    const { choices } = data;
+    const { message } = choices[0];
+    const { content } = message;
+
+    const contentJSON = JSON.parse(content);
+    console.log(content);
+    const { winners, errors } = contentJSON;
+
+    if (winners.length === 0 && errors === "") {
+      return {
+        content: [],
+        errors: "Error when generating response",
+      };
+    }
+    return {
+      content: winners,
+      errors: errors,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      content: "Error when generating response",
+      errors: "Error when generating response",
+    };
+  }
+};
