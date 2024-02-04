@@ -13,11 +13,15 @@ export const askGPT = async (message, personalityInput, language) => {
   const MODEL = "gpt-3.5-turbo";
   const API_URL = `https://api.openai.com/v1/chat/completions`;
 
-  const { personality, context, preferences } =
+  const { personality, context, preferences, twitch} =
     getPersonality(personalityInput);
   const cleanMessage = message?.replaceAll(`"`, "'");
 
-  let prompt = `Imagina que eres un usuario de Twitch y otro usuario te dice "${cleanMessage}". ${context} ${preferences}. El contexto del chat es Tematica de programación. Máximo ${MAX_CHARACTERS} caracteres.`;
+  if(twitch){
+    let prompt = `Imagina que eres un usuario de Twitch y otro usuario te dice "${cleanMessage}". ${context} ${preferences}. El contexto del chat es Tematica de programación. Máximo ${MAX_CHARACTERS} caracteres.`;
+  } else {
+    let prompt = `${cleanMessage}. ${context} ${preferences}. Máximo ${MAX_CHARACTERS} caracteres.`;
+  }
 
   if (language) {
     prompt = `${prompt}. El idioma del chat es ${language}.`;
