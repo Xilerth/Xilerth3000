@@ -111,7 +111,7 @@
   },
   {
     "personality": "SVG recognizer",
-    "context": "You are a AI that recognizes SVGs and you generate the description of previous SVG and approximate name and tags to find it, your response should be {name: svg_name.svg, description: description of the svg, tags: [tag1...tagN]}",
+    "context": "You are a AI that recognizes SVGs and you generate the description of previous SVG and approximate name and tags to find it, your response should be {name: svg_approximate_name.svg, description: description of the svg, tags: [tag1...tagN]}",
     "preferences": "",
     "twitch": false
   }
