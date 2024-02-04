@@ -10,7 +10,7 @@ const trim = (message) => message.trim().replace(/^"|"$|/g, "");
 export const askGPT = async (message, personalityInput, language) => {
   const GPT_KEY = process.env.GPT_KEY;
   const MAX_CHARACTERS = 200;
-  const MODEL = "gpt-3.5-turbo";
+  const MODEL = "gpt-4";
   const API_URL = `https://api.openai.com/v1/chat/completions`;
 
   const { personality, context, preferences, twitch } =
