@@ -10,7 +10,7 @@ setupExpress();
 
 const USER = process.env.USER;
 const PASSWORD = process.env.PASSWORD;
-const CHANNELS = ["xilerth"];
+const CHANNELS = [""];
 let enabled = false;
 
 const client = new tmi.Client({
