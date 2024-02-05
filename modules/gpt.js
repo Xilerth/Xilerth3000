@@ -246,3 +246,74 @@ export const randomUsers = async (userList, count) => {
     };
   }
 };
+
+export const randomWords = async (lang, category) => {
+  const GPT_KEY = process.env.GPT_KEY;
+  const MODEL = "gpt-3.5-turbo";
+  const API_URL = `https://api.openai.com/v1/chat/completions`;
+
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${GPT_KEY}`,
+  };
+
+  const body = {
+    messages: [
+      {
+        role: "user",
+
+        content: trim(
+          `Generame una palabra aleatoria en el idioma "${lang}", genera una descripcion para esa palabra en "${lang}", ten en cuenta la categoria elegida "${category}", elige entre palabras comunes y no comunes, tienes que responder con el siguiente formato json: {"word": "word", "description": "description"}.`
+        ),
+      },
+    ],
+    temperature: 0.8,
+    model: MODEL,
+    n: 1,
+    stop: null,
+  };
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    const { choices } = data;
+    const { message } = choices[0];
+    const { content } = message;
+    console.log(content);
+    try {
+      const contentJSON = JSON.parse(content);
+
+      const { word, description } = contentJSON;
+      console.log(word, description);
+      if (!word && !description) {
+        return {
+          word,
+          description,
+          errors: "Error when generating response",
+        };
+      }
+      return {
+        word,
+        description,
+        errors: "",
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        word,
+        description,
+        errors: "Error when generating response",
+      };
+    }
+  } catch (error) {
+    return {
+      word: "",
+      description: "",
+      errors: "Error when generating response",
+    };
+  }
+};

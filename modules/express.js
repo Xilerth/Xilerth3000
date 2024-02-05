@@ -1,6 +1,12 @@
 import express from "express";
 import cors from "cors";
-import { askGPT, celebPhrase, translate, randomUsers } from "./gpt.js";
+import {
+  askGPT,
+  celebPhrase,
+  translate,
+  randomUsers,
+  randomWords,
+} from "./gpt.js";
 import bodyParser from "body-parser";
 import personalities from "../personalities.json" assert { type: "json" };
 import requestIp from "request-ip";
@@ -122,6 +128,13 @@ export const setupExpress = () => {
 
   app.get("/languages", (req, res) => {
     res.send(languages);
+  });
+
+  app.get("/random-words", async (req, res) => {
+    const { lang, category } = req.query;
+    const words = await randomWords(lang, category);
+    console.log(words);
+    res.send(words);
   });
 };
 
