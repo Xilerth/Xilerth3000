@@ -6,6 +6,7 @@ import {
   translate,
   randomUsers,
   randomWords,
+  randomUserName,
 } from "./gpt.js";
 import bodyParser from "body-parser";
 import personalities from "../personalities.json" assert { type: "json" };
@@ -124,6 +125,18 @@ export const setupExpress = () => {
   app.get("/celebPhrase", async (req, res) => {
     const { content } = await celebPhrase();
     res.send({ content });
+  });
+
+  app.get("/randomNames", async (req, res) => {
+    const { content } = await randomUserName();
+    try {
+      const cleanContent = content.replace(/"/g, '"').replace(/'/g, '"').replace(/\\n/g, '');
+      console.log(cleanContent);
+      const name = JSON.parse(cleanContent);
+      res.send(name);
+    } catch (e) {
+      res.send({ username: "Pedro pedro Pe" });
+    }
   });
 
   app.get("/languages", (req, res) => {

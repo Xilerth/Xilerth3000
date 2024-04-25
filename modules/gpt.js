@@ -82,6 +82,50 @@ export const askGPT = async (message, personalityInput, language) => {
   }
 };
 
+export const randomUserName = async () => {
+  const GPT_KEY = process.env.GPT_KEY;
+  const MAX_CHARACTERS = 200;
+  const MODEL = "gpt-3.5-turbo";
+  const API_URL = `https://api.openai.com/v1/chat/completions`;
+
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${GPT_KEY}`,
+  };
+
+  const body = {
+    messages: [
+      {
+        role: "user",
+        content: trim(
+          `Combina un adjetivo con un sustantivo y otro sustantivo para crear un nombre de usuario compuesto único. El resultado tiene que tener formato json {"username": "nombre"}`
+        ),
+      },
+    ],
+    model: MODEL,
+    max_tokens: MAX_CHARACTERS,
+    n: 1,
+    stop: null,
+  };
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    const { content } = data.choices[0].message;
+
+    return {
+      content: trim(content),
+    };
+  } catch (error) {
+    console.error(error);
+    return "Error al generar respuesta";
+  }
+};
+
 export const celebPhrase = async () => {
   const GPT_KEY = process.env.GPT_KEY;
   const MAX_CHARACTERS = 200;
