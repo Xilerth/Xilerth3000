@@ -16,7 +16,22 @@ import fs from "fs";
 
 const app = express();
 app.use(requestIp.mw());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://xilerth.com",
+      "https://www.xilerth.com",
+      "https://porfolio.xilerth.com",
+      "https://genius.xilerth.com",
+      "https://translate.xilerth.com",
+      "https://random.xilerth.com",
+      "https://splitket.com",
+      "https://www.splitket.com",
+      "http://localhost:4200",
+      "https://splitket-e6c9a.web.app/"
+    ],
+  })
+);
 const port = process.env.PORT || 4000;
 
 //maximo 2000 tokens por ip
@@ -130,7 +145,10 @@ export const setupExpress = () => {
   app.get("/randomNames", async (req, res) => {
     const { content } = await randomUserName();
     try {
-      const cleanContent = content.replace(/"/g, '"').replace(/'/g, '"').replace(/\\n/g, '');
+      const cleanContent = content
+        .replace(/"/g, '"')
+        .replace(/'/g, '"')
+        .replace(/\\n/g, "");
       console.log(cleanContent);
       const name = JSON.parse(cleanContent);
       res.send(name);
