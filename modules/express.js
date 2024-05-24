@@ -27,7 +27,6 @@ app.use(
       "https://random.xilerth.com",
       "https://splitket.com",
       "https://www.splitket.com",
-      "http://localhost:4200",
       "https://splitket-e6c9a.web.app"
     ],
   })
